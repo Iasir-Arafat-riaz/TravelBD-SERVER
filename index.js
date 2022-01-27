@@ -12,7 +12,8 @@ app.use(express.json());
 const { MongoClient } = require("mongodb");
 
 const uri =
-  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}KlAcunVMDY1MdJm1@cluster0.gukqi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.gukqi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
 
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
@@ -23,7 +24,13 @@ async function run() {
     await client.connect();
     const database = client.db("TravelBD");
     const blogs = database.collection("TravellerEXP");
-    // query for movies that have a runtime less than 15 minutes
+    
+app.get("/travellerExperience", async(req,res)=>{
+    const travellerExp = blogs.find({})
+  const result = await travellerExp.toArray()
+  res.json(result)
+})
+
     
   } finally {
     // await client.close();
