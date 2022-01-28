@@ -40,6 +40,38 @@ async function run() {
       res.json(result);
     });
 
+    // delete blog api
+    app.delete('/deleteblog/:blogId', async (req, res) => {
+      const blogId = req.params.blogId;
+      const query = { _id: ObjectId(blogId) };
+      res.send(await blogs.deleteOne(query))
+  })
+
+  // update post status
+  app.put('/blog/:id', async (req, res) => {
+      const id = req.params.id;
+      const updateSatus = req.body.status;
+      const filter = { _id: ObjectId(id) };
+      const result = await blogs.updateOne(filter, {
+          $set: { status: updateSatus }
+      });
+      res.send(result);
+  });
+
+  //BLOG POST
+  app.post("/blog", async(req,res)=>{
+    const query =req.body
+    const result = await blogs.insertOne(query);
+    res.json(result)
+  })
+
+    //User REVIEWS
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.json(result);
+    });
+
     app.get("/webreviews", async (req, res) => {
       res.send(await reviewCollection.find({}).toArray());
     });
@@ -83,6 +115,7 @@ async function run() {
         isAdmin = true;
       }
       res.json({ admin: isAdmin });
+      console.log(email, isAdmin);
     });
   } finally {
     // await client.close();
